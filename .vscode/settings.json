@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "IABasicaMatematicas.sln"
+    "dotnet.defaultSolution": "IABasicaMatematicas.slnx"
 }
