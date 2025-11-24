@@ -36,7 +36,7 @@ public class PhantomMove : MonoBehaviour
         luigi_view = goal.transform.forward;
         Debug.Log("Dirección a la que mira luigi" + luigi_view);
 
-        // Obtenemos 
+        // Obtengo el Vector3 de Luigi hasta los Fantasmas
         Vector3 toPhantom = (transform.position - goal.transform.position).normalized;
 
 
