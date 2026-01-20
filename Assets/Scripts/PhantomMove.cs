@@ -39,21 +39,24 @@ public class PhantomMove : MonoBehaviour
         // Obtengo el Vector3 de Luigi hasta los Fantasmas
         Vector3 toPhantom = (transform.position - goal.transform.position).normalized;
 
-
+        // Calculamos el producto punto entre la dirección de la vista de Luigi y la dirección hacia los fantasmas
         float dot = Vector3.Dot(luigi_view, toPhantom);
 
         //  Calculamos el umbral de detección 
         // Si el fantasma esta en el radio de visión frontal de luigi, interrumpimos la funcion
+        // El umbral es 0.9f , es decir, un ángulo de visión de aproximadamente 25 grados
         if (dot > 0.9f)
         {
             Debug.Log("Luigi mira fijamente a los fantasmas , estos se han congelado");
             return;
         }
 
-
+        // Si no, los fantasmas se moverán hacia Luigi
         direction = goal.transform.position - this.transform.position;
+        // Orientamos los fantasmas hacia Luigi
         this.transform.LookAt(goal.transform.position);
 
+        // Si la distancia entre los fantasmas y Luigi es mayor que 2 unidades, los fantasmas se moverán hacia él
         if (direction.magnitude > 2)
         {
 

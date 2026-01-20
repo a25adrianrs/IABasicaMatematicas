@@ -24,7 +24,7 @@ public class VillagerDrive : MonoBehaviour
 
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
-
+        // Move o aldeán cara adiante/atrás e rótao segundo a entrada do usuario.
         transform.Translate(0, 0, translation);
         transform.Rotate(0, rotation, 0);
     }
