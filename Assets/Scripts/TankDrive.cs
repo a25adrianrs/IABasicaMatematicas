@@ -32,23 +32,30 @@ public class TankDrive : MonoBehaviour
     // CalculateAngle calcula o ángulo entre o tanque e o obxecto fuel e rota o tanque cara a el se é necesario.
     void CalculateAngle()
     {
+        // Vector3 tankForward: vector que indica a dirección cara adiante do tanque.
         Vector3 tankForward = transform.up;
+        // Vector3 fuelDirection: vector que indica a dirección cara ao obxecto fuel desde o tanque.
         Vector3 fuelDirection = fuel.transform.position - transform.position;
 
+        // Debuxar os vectores na escena para visualización.
         Debug.DrawRay(this.transform.position, tankForward * 10, Color.green, 5);
         Debug.DrawRay(this.transform.position, fuelDirection, Color.red, 5);
 
+        // Calcular o ángulo entre os dous vectores usando o produto escalar.
         float dot = tankForward.x * fuelDirection.x + tankForward.y * fuelDirection.y;
+        // Mathf.Acos devolve o ángulo en radianes.
         float angle = Mathf.Acos(dot / (tankForward.magnitude * fuelDirection.magnitude));
 
         Debug.Log("Angle: " + angle * Mathf.Rad2Deg);
         Debug.Log("Unity Angle: " + Vector3.Angle(tankForward, fuelDirection));
 
+        // Determinar a dirección de rotación usando o produto vectorial.
         int clockwise = 1;
+        // Se o compoñente z do produto vectorial é negativo, xira en sentido horario.
         if (Cross(tankForward, fuelDirection).z < 0)
             clockwise = -1;
-
-        if((angle * Mathf.Rad2Deg) > 10)
+        // Rotar o tanque se o ángulo é maior que 10 graos.
+        if ((angle * Mathf.Rad2Deg) > 10)
             this.transform.Rotate(0, 0, angle * Mathf.Rad2Deg * clockwise * rspeed);
     }
 
@@ -64,13 +71,15 @@ public class TankDrive : MonoBehaviour
     // CalculateDistance calcula a distancia entre o tanque e o obxecto fuel e amosa información na consola.
     float CalculateDistance()
     {
-        float distance = Mathf.Sqrt(Mathf.Pow(fuel.transform.position.x - transform.position.x,2) +
-                                    Mathf.Pow(fuel.transform.position.z - transform.position.z,2));
-
+        // Cálculo da distancia euclidiana en 2D (x,z).
+        float distance = Mathf.Sqrt(Mathf.Pow(fuel.transform.position.x - transform.position.x, 2) +
+                                    Mathf.Pow(fuel.transform.position.z - transform.position.z, 2));
+        // Cálculo da distancia usando Vector3.Distance en 2D (x,z).
         Vector3 fuelPos = new Vector3(fuel.transform.position.x, 0, fuel.transform.position.z);
         Vector3 tankPos = new Vector3(transform.position.x, 0, transform.position.z);
-        float uDistance = Vector3.Distance(fuelPos, tankPos);
 
+        float uDistance = Vector3.Distance(fuelPos, tankPos);
+        // Cálculo da distancia usando magnitude e sqrMagnitude.
         Vector3 tankToFuel = fuelPos - tankPos;
 
         Debug.Log("Distance: " + distance);
@@ -88,12 +97,15 @@ public class TankDrive : MonoBehaviour
     // Se está activo, move o tanque automaticamente cara ao fuel.
     void LateUpdate()
     {
+        // Movemento manual do tanque.
         float translation = Input.GetAxis("Vertical") * speed;
+        // Rotación manual do tanque.
         float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
 
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
 
+        // Aplicar movemento e rotación ao tanque.
         transform.Translate(0, translation, 0);
         transform.Rotate(0, 0, -rotation);
 
