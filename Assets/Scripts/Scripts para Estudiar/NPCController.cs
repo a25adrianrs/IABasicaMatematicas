@@ -8,7 +8,7 @@ public class NPCController : MonoBehaviour
 {
 
     // Estados posibles del NPC
-    enum State { Patrol, Evade };
+    enum State { Patrol, Evade, Hide };
 
     // Estado inicial del NPC
     State currentState = State.Patrol;
@@ -41,9 +41,12 @@ public class NPCController : MonoBehaviour
     // RigidBody de la amenaza (player)
     private Rigidbody threatRB;
 
-
     // Posición inicial del NPC
     Vector3 startPosition;
+
+    [Header("Hide Settings")]
+    public Transform hidePoint; // Punto al que escapara el NPC a esconderse
+
 
     void Start()
     {
@@ -76,11 +79,20 @@ public class NPCController : MonoBehaviour
         {
             currentState = State.Evade;
         }
+        else if (currentState == State.Evade && distance < 5)
+        {
+            currentState = State.Hide;
+        }
         // Si está huyendo y jugador lejos -> volver a patrullar
+        else if (currentState == State.Hide && distance > 15f)
+        {
+            currentState = State.Patrol;
+        }
         else if (currentState == State.Evade && distance > 15f)
         {
             currentState = State.Patrol;
         }
+
 
         //-------------------------------------------------
         // SI EL ESTADO CAMBIÓ
@@ -100,6 +112,8 @@ public class NPCController : MonoBehaviour
                 patrolTimePassed = patrolWait;
             }
 
+
+
         }
         //-------------------------------------------------
         // EJECUTAR COMPORTAMIENTO SEGÚN ESTADO
@@ -112,6 +126,10 @@ public class NPCController : MonoBehaviour
 
             case State.Evade:
                 Evade();
+                break;
+
+            case State.Hide:
+                Hide();
                 break;
         }
 
@@ -172,6 +190,31 @@ public class NPCController : MonoBehaviour
                 agent.SetDestination(targetPosition);
             }
 
+        }
+
+
+
+        //-----------------------------------------
+        // COMPORTAMIENTO: HIDE
+        //-----------------------------------------
+
+        void Hide()
+        {
+            float distance = Vector3.Distance(transform.position, hidePoint.position);
+
+            if (distance > 1f)
+            {
+                agent.SetDestination(hidePoint.position);
+            }
+            else
+            {
+                if (agent.hasPath)
+                {
+                    agent.ResetPath();
+                    Debug.Log("Me estoy escondiendo");
+                }
+
+            }
         }
     }
 }
