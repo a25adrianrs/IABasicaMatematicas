@@ -7,6 +7,8 @@ using UnityEngine.AI;
 public class NPCController : MonoBehaviour
 {
 
+
+
     // Estados posibles del NPC
     enum State { Patrol, Evade, Hide };
 
@@ -79,7 +81,7 @@ public class NPCController : MonoBehaviour
         {
             currentState = State.Evade;
         }
-        else if (currentState == State.Evade && distance < 5)
+        else if (currentState == State.Evade && distance < 5 && gameObject.layer == LayerMask.NameToLayer("Coward"))
         {
             currentState = State.Hide;
         }
@@ -204,7 +206,10 @@ public class NPCController : MonoBehaviour
 
             if (distance > 1f)
             {
-                agent.SetDestination(hidePoint.position);
+                if (gameObject.layer == LayerMask.NameToLayer("Coward"))
+                {
+                    agent.SetDestination(hidePoint.position);
+                }
             }
             else
             {
